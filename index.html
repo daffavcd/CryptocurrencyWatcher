@@ -39,111 +39,97 @@
     </div>
     <div class="container">
         <div class="row" id="coin-container">
-            <div class="col-xl-3 card-col col-sm-12">
-                <div class="card">
-                    <div class="divku-1">
-                        <img src="./images/bitcoin-btc-logo.svg" class="img-crypto card-img-top" alt="btc-image">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Bitcoin <span class="singkatanku">BTC </span><span class="hijauku"><i
-                                    class="fa-solid fa-caret-up"></i>
-                                18.51%</span></h5>
-                        <p class="card-text">
-                            <b>Price - </b> $37,974.40 <br>
-                            <b>Volume(24h) -</b> $23,083,771,363
-                        </p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 card-col col-sm-12">
-                <div class="card">
-                    <div class="divku-1">
-                        <img src="./images/dogecoin-doge-logo.svg" class="img-crypto card-img-top" alt="btc-image">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Dogecoin <span class="singkatanku">Doge </span><span class="merahku"><i
-                                    class="fa-solid fa-caret-down"></i>
-                                3.77%</span></h5>
-                        <p class="card-text">
-                            <b>Price - </b> $0.1194 <br>
-                            <b>Volume(24h) -</b> $458,123,922
-                        </p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 card-col col-sm-12">
-                <div class="card">
-                    <div class="divku-1">
-                        <img src="./images/bitcoin-btc-logo.svg" class="img-crypto card-img-top" alt="btc-image">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Bitcoin <span class="singkatanku">BTC </span><span class="hijauku"><i
-                                    class="fa-solid fa-caret-up"></i>
-                                18.51%</span></h5>
-                        <p class="card-text">
-                            <b>Price - </b> $37,974.40 <br>
-                            <b>Volume(24h) -</b> $23,083,771,363
-                        </p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 card-col col-sm-12">
-                <div class="card">
-                    <div class="divku-1">
-                        <img src="./images/dogecoin-doge-logo.svg" class="img-crypto card-img-top" alt="btc-image">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Dogecoin <span class="singkatanku">Doge </span><span class="merahku"><i
-                                    class="fa-solid fa-caret-down"></i>
-                                3.77%</span></h5>
-                        <p class="card-text">
-                            <b>Price - </b> $0.1194 <br>
-                            <b>Volume(24h) -</b> $458,123,922
-                        </p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 card-col col-sm-12">
-                <div class="card">
-                    <div class="divku-1">
-                        <img src="./images/dogecoin-doge-logo.svg" class="img-crypto card-img-top" alt="btc-image">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Dogecoin <span class="singkatanku">Doge </span><span class="merahku"><i
-                                    class="fa-solid fa-caret-down"></i>
-                                3.77%</span></h5>
-                        <p class="card-text">
-                            <b>Price - </b> $0.1194 <br>
-                            <b>Volume(24h) -</b> $458,123,922
-                        </p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 card-col col-sm-12">
-                <div class="card">
-                    <div class="divku-1">
-                        <img src="./images/dogecoin-doge-logo.svg" class="img-crypto card-img-top" alt="btc-image">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Dogecoin <span class="singkatanku">Doge </span><span class="merahku"><i
-                                    class="fa-solid fa-caret-down"></i>
-                                3.77%</span></h5>
-                        <p class="card-text">
-                            <b>Price - </b> $0.1194 <br>
-                            <b>Volume(24h) -</b> $458,123,922
-                        </p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                </div>
-            </div>
+
         </div>
     </div>
     <script src="./dist/main.js"></script>
+    <script>
+        $(document).ready(function () {
+            console.log("ready!");
+            getAllItem();
+        });
+
+        const myKey = '5147C05F-48E2-4E36-9777-EE8636661C6F';
+        const baseUrl = 'https://rest.coinapi.io/v1';
+        const filterCoin = '?filter_asset_id=BTC;ADA;MATIC;SOL;XRP;ETH;DOGE;DOT;LTC;BNB;USDT;UNI';
+
+        const getAllItem = async () => {
+            try {
+                const options = {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CoinAPI-Key": myKey
+                    }
+                };
+
+                const response = await fetch(`${baseUrl}/assets/${filterCoin}`, options);
+                const responseJson = await response.json();
+
+                if (responseJson.error) {
+                    showResponseMessage(responseJson.error);
+                } else {
+
+                    //LOOPING EVERY FITEM
+
+                    responseJson.slice(0, 15).forEach(element => {
+                        console.log("ready!");
+                        appendItem(element);
+                    });
+
+                }
+            } catch (error) {
+                showResponseMessage(error);
+            }
+        }
+
+        const appendItem = async (item) => {
+            const itemWilappended = await renderItem(item);
+            $("#coin-container").append(itemWilappended);
+        }
+
+        const renderItem = (item) => {
+            let harga;
+            if (isNaN(item.price_usd)) {
+                harga = "1:1";
+            } else {
+                harga = item.price_usd;
+            }
+            return `
+            <div class="col-xl-3 card-col col-sm-12">
+                <div class="card">
+                    <div class="divku-1">
+                        <img src="./node_modules/cryptocurrency-icons/svg/color/${item.asset_id.toLowerCase()}.svg" class="img-crypto card-img-top"
+                            alt="${item.asset_id}-image">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">${item.name} <span class="singkatanku">${item.asset_id} </span><span class="hijauku"><i
+                                    class="fa-solid fa-caret-up"></i>
+                                18.51%</span></h5>
+                        <p class="card-text">
+                            <b>Price - </b>  ${formatter.format(harga)} <br>
+                            <b>Volume(24h) -</b> ${formatter.format(item.volume_1day_usd)}
+                        </p>
+                        
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        const showResponseMessage = (errormsg) => {
+            alert(errormsg);
+        }
+
+        var formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+
+            // These options are needed to round to whole numbers if that's what you want.
+            minimumFractionDigits: 2, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+            //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+        });
+    </script>
 </body>
 
 </html>
