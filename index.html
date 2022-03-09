@@ -46,6 +46,18 @@
     <script>
         $(document).ready(function () {
             console.log("ready!");
+            let today;
+
+
+            // let date1 = new Date();
+            // today = date1.toISOString();
+            // alert(date1.toISOString());
+
+            // let yesterday;
+            // var date2 = new Date();
+            // date2.setDate(date2.getDate() - 1);
+            // alert(date2.toISOString());
+
             getAllItem();
         });
 
@@ -88,13 +100,8 @@
             $("#coin-container").append(itemWilappended);
         }
 
-        const renderItem = (item) => {
-            let harga;
-            if (isNaN(item.price_usd)) {
-                harga = "1:1";
-            } else {
-                harga = item.price_usd;
-            }
+        const renderItem = async (item) => {
+            const afterObjHitung = await findPerItem(item);
             return `
             <div class="col-xl-3 card-col col-sm-12">
                 <div class="card">
@@ -103,9 +110,9 @@
                             alt="${item.asset_id}-image">
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">${item.name} <span class="singkatanku">${item.asset_id} </span><span class="hijauku"><i
-                                    class="fa-solid fa-caret-up"></i>
-                                18.51%</span></h5>
+                        <h5 class="card-title">${item.name} <span class="singkatanku">${item.asset_id} </span><span class="${afterObjHitung.colorClass}"><i
+                                    class="fa-solid fa-caret-${afterObjHitung.caret}"></i>
+                                ${afterObjHitung.percentageDifferent}%</span></h5>
                         <p class="card-text">
                             <b>Price - </b>  ${formatter.format(harga)} <br>
                             <b>Volume(24h) -</b> ${formatter.format(item.volume_1day_usd)}
@@ -115,6 +122,50 @@
                 </div>
             </div>
             `;
+        }
+
+        const findPerItem = async (item) => {
+            //GET EXACT YESTERDAY PRICE
+            let yesterday;
+            var date2 = new Date();
+            date2.setDate(date2.getDate() - 1);
+            yesterday = date2.toISOString();
+
+            try {
+                const options = {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CoinAPI-Key": myKey
+                    }
+                };
+
+                const response = await fetch(`${baseUrl}/exchangerate/${item.asset_id}/USD?time=${yesterday}`, options);
+                const responseJson = await response.json();
+
+                if (responseJson.error) {
+                    showResponseMessage(responseJson.error);
+                } else {
+                    //CALCULATE PERCENTAGE NOW
+                    let caret;
+                    let colorClass;
+
+                    let percentageDifferent = ((parseInt(item.rate) - parseInt(responseJson.rate)) / ((parseInt(item.rate) + parseInt(responseJson.rate)) / 2)) * 100;
+
+                    if (item.rate >= responseJson.item) {
+                        colorClass = "hijauku";
+                        caret = "up";
+                    } else {
+                        colorClass = "merahku";
+                        caret = "down";
+                    }
+
+                    const objKu = { caret: caret, colorClass: colorClass, percentageDifferent: percentageDifferent };
+                    return objKu;
+                }
+            } catch (error) {
+                showResponseMessage(error);
+            }
         }
 
         const showResponseMessage = (errormsg) => {
