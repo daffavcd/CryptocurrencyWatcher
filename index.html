@@ -42,23 +42,31 @@
 
         </div>
     </div>
+
     <script src="./dist/main.js"></script>
     <script>
         $(document).ready(function () {
             console.log("ready!");
-            let today;
+            let chance;
+            let tot_ady;
+            let today = new Date();
+            localDate = new Date(localStorage.getItem("last_used_day"));
 
+            if (localStorage.getItem("last_used_day") === null || today >= localDate) {
+                localStorage.setItem("request_today_apiku", 1);
+                localStorage.setItem("last_used_day", new Date());
+                chance = 10 - localStorage.getItem("request_today_apiku");
+            } else {
+                tot_ady = localStorage.getItem("request_today_apiku");
+                localStorage.setItem("request_today_apiku", parseInt(tot_ady) + 1);
+                chance = 10 - localStorage.getItem("request_today_apiku");
+            }
 
-            // let date1 = new Date();
-            // today = date1.toISOString();
-            // alert(date1.toISOString());
-
-            // let yesterday;
-            // var date2 = new Date();
-            // date2.setDate(date2.getDate() - 1);
-            // alert(date2.toISOString());
+            alert(`${chance} remaining chance to reload it for today. Please be understand, because i use a free limited CoinAPI.io API :)`);
 
             getAllItem();
+            //UNCOMMENT THIS BELLOW PLEASE IF YOU WANT TO SEE THE PERCENTAGE
+            // getPercentageAllItem();
         });
 
         const myKey = '5147C05F-48E2-4E36-9777-EE8636661C6F';
@@ -83,11 +91,14 @@
                 } else {
 
                     //LOOPING EVERY FITEM
-
-                    responseJson.slice(0, 15).forEach(element => {
-                        console.log("ready!");
+                    for (const element of responseJson.slice(0, 15)) {
                         appendItem(element);
-                    });
+
+                    }
+                    // responseJson.slice(0, 15).forEach(element => {
+                    //     console.log("ready!");
+                    //     appendItem(element);
+                    // });
 
                 }
             } catch (error) {
@@ -112,9 +123,9 @@
                     <div class="card-body">
                         <h5 class="card-title">${item.name} <span class="singkatanku">${item.asset_id} </span><span class="${afterObjHitung.colorClass}"><i
                                     class="fa-solid fa-caret-${afterObjHitung.caret}"></i>
-                                ${afterObjHitung.percentageDifferent}%</span></h5>
+                                ${afterObjHitung.percentageDifferent.toFixed(2)}%</span></h5>
                         <p class="card-text">
-                            <b>Price - </b>  ${formatter.format(harga)} <br>
+                            <b>Price - </b>  ${formatter.format(item.price_usd)} <br>
                             <b>Volume(24h) -</b> ${formatter.format(item.volume_1day_usd)}
                         </p>
                         
@@ -150,9 +161,9 @@
                     let caret;
                     let colorClass;
 
-                    let percentageDifferent = ((parseInt(item.rate) - parseInt(responseJson.rate)) / ((parseInt(item.rate) + parseInt(responseJson.rate)) / 2)) * 100;
-
-                    if (item.rate >= responseJson.item) {
+                    let percentageDifferent = ((parseInt(item.price_usd) - parseInt(responseJson.rate)) / ((parseInt(item.price_usd) + parseInt(responseJson.rate)) / 2)) * 100;
+                    alert(`${item.asset_id}__${parseInt(item.price_usd)}___${parseInt(responseJson.rate)} `);
+                    if (item.price_usd >= responseJson.rate) {
                         colorClass = "hijauku";
                         caret = "up";
                     } else {
