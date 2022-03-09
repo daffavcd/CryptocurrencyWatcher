@@ -64,7 +64,7 @@
 
             alert(`${chance} remaining chance to reload it for today. Please be understand, because i use a free limited CoinAPI.io API :)`);
 
-            getAllItem();
+            await getAllItem();
             //UNCOMMENT THIS BELLOW PLEASE IF YOU WANT TO SEE THE PERCENTAGE
             // getPercentageAllItem();
         });
@@ -72,6 +72,13 @@
         const myKey = '5147C05F-48E2-4E36-9777-EE8636661C6F';
         const baseUrl = 'https://rest.coinapi.io/v1';
         const filterCoin = '?filter_asset_id=BTC;ADA;MATIC;SOL;XRP;ETH;DOGE;DOT;LTC;BNB;USDT;UNI';
+        const filterCoinArray = ['BTC', 'ADA', 'MATIC', 'SOL', 'XRP', 'ETH', 'DOGE', 'DOT', 'LTC', 'BNB', 'USDT', 'UNI'];
+
+        const getPercentageAllItem = async () => {
+            for (let index = 0; index < filterCoinArray.length; index++) {
+                await findPerItem(filterCoinArray[index]);
+            }
+        }
 
         const getAllItem = async () => {
             try {
@@ -112,7 +119,6 @@
         }
 
         const renderItem = async (item) => {
-            const afterObjHitung = await findPerItem(item);
             return `
             <div class="col-xl-3 card-col col-sm-12">
                 <div class="card">
@@ -121,10 +127,11 @@
                             alt="${item.asset_id}-image">
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">${item.name} <span class="singkatanku">${item.asset_id} </span><span class="${afterObjHitung.colorClass}"><i
-                                    class="fa-solid fa-caret-${afterObjHitung.caret}"></i>
-                                ${afterObjHitung.percentageDifferent.toFixed(2)}%</span></h5>
+                        <h5 class="card-title">${item.name} <span class="singkatanku">${item.asset_id} </span><span id="span_${item.asset_id}"><i
+                                    class="fa-solid fa-caret-up" id="caret_${item.asset_id}"></i>
+                                TBA%</span></h5>
                         <p class="card-text">
+                            <input type="hidden" id="vprice_${item.asset_id}" value="${item.price_usd}">
                             <b>Price - </b>  ${formatter.format(item.price_usd)} <br>
                             <b>Volume(24h) -</b> ${formatter.format(item.volume_1day_usd)}
                         </p>
@@ -138,6 +145,7 @@
         const findPerItem = async (item) => {
             //GET EXACT YESTERDAY PRICE
             let yesterday;
+            let curprice = $('#vprice_' + item);
             var date2 = new Date();
             date2.setDate(date2.getDate() - 1);
             yesterday = date2.toISOString();
@@ -151,7 +159,7 @@
                     }
                 };
 
-                const response = await fetch(`${baseUrl}/exchangerate/${item.asset_id}/USD?time=${yesterday}`, options);
+                const response = await fetch(`${baseUrl}/exchangerate/${item}/USD?time=${yesterday}`, options);
                 const responseJson = await response.json();
 
                 if (responseJson.error) {
@@ -161,9 +169,9 @@
                     let caret;
                     let colorClass;
 
-                    let percentageDifferent = ((parseInt(item.price_usd) - parseInt(responseJson.rate)) / ((parseInt(item.price_usd) + parseInt(responseJson.rate)) / 2)) * 100;
-                    alert(`${item.asset_id}__${parseInt(item.price_usd)}___${parseInt(responseJson.rate)} `);
-                    if (item.price_usd >= responseJson.rate) {
+                    let percentageDifferent = ((parseInt(curprice) - parseInt(responseJson.rate)) / ((parseInt(curprice) + parseInt(responseJson.rate)) / 2)) * 100;
+                    alert(`${item.asset_id}__${parseInt(curprice)}___${parseInt(responseJson.rate)} `);
+                    if (curprice >= responseJson.rate) {
                         colorClass = "hijauku";
                         caret = "up";
                     } else {
@@ -172,7 +180,11 @@
                     }
 
                     const objKu = { caret: caret, colorClass: colorClass, percentageDifferent: percentageDifferent };
-                    return objKu;
+
+                    $("#span_" + item).attr('class', objKu.colorClass);
+                    $("#span_" + item).html(`
+                    <i class="fa-solid fa-caret-${objKu.caret}" id="caret_${item}"></i>${objKu.percentageDifferent.toFixed(2)}}%
+                    `);
                 }
             } catch (error) {
                 showResponseMessage(error);
