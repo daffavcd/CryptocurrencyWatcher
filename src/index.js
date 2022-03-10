@@ -1,6 +1,6 @@
 "use strict";
 
-import "@fontsource/open-sans";
+import '@fontsource/open-sans';
 import '@fortawesome/fontawesome-free/js/fontawesome'
 import '@fortawesome/fontawesome-free/js/solid'
 import '@fortawesome/fontawesome-free/js/regular'

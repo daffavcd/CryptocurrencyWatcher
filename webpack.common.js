@@ -1,6 +1,7 @@
 const path = require("path");
 var webpack = require('webpack');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
     entry: ["regenerator-runtime/runtime.js", "./src/index.js"],
@@ -24,8 +25,18 @@ module.exports = {
                     // Compiles Sass to CSS
                     "sass-loader",
                 ],
-            }
-
+            },
+            // {
+            //     test: /\.css$/i,
+            //     use: [
+            //         {
+            //             loader: 'file-loader',
+            //             options: {
+            //                 emitFile: false,
+            //             },
+            //         },
+            //     ],
+            // },
         ]
     },
     plugins: [
@@ -37,6 +48,15 @@ module.exports = {
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery"
-        })
+        }),
+        new CopyPlugin({
+            patterns: [
+                {
+                    from: "cryptocurrency-icons/svg/color/*.svg",
+                    to: "./images",
+                    context: "node_modules",
+                },
+            ],
+        }),
     ]
 }
