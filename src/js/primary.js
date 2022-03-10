@@ -78,7 +78,7 @@ const renderItem = async (item) => {
     <div class="col-xl-3 card-col col-sm-12">
         <div class="card">
             <div class="divku-1">
-                <img src="./node_modules/cryptocurrency-icons/svg/color/${item.asset_id.toLowerCase()}.svg" class="img-crypto card-img-top"
+                <img src="../node_modules/cryptocurrency-icons/svg/color/${item.asset_id.toLowerCase()}.svg" class="img-crypto card-img-top"
                     alt="${item.asset_id}-image">
             </div>
             <div class="card-body">
