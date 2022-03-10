@@ -7,5 +7,5 @@
 This Project is one of my project during Front-end & Back-end web batch class.
 
 - just run npm install
-
-i'm using free API from https://www.coinapi.io, so please don't refresh it to much :) every time the page is refreshed, its requires 10 request for calculating the rate comparassion.
+- uncomment on primary.js line 63 for activate the rate comparison
+i'm using free API from https://www.coinapi.io, so please don't refresh it to much :) every time the page is refreshed, its requires 10 request for calculating the rate comparison.
