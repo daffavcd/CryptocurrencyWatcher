@@ -60,7 +60,7 @@ const getAllItem = async () => {
             }
 
             //UNCOMMENT THIS BELLOW PLEASE IF YOU WANT TO SEE THE PERCENTAGE
-            // getPercentageAllItem();
+            getPercentageAllItem();
 
         }
     } catch (error) {
