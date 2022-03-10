@@ -6,3 +6,31 @@ body {
 .img-crypto {
     width: 80px;
 }
+
+head-container {
+    text-align: center;
+}
+
+.hijauku {
+    color: #16c784;
+    font-size: 15px;
+}
+
+.merahku {
+    color: #ea3943;
+    font-size: 15px;
+}
+
+.singkatanku {
+    color: #c7c0c0;
+    font-size: 18px;
+}
+
+.divku-1 {
+    text-align: center;
+    padding: 10px 10px 0px 10px;
+}
+
+.card-col {
+    margin-bottom: 20px;
+}

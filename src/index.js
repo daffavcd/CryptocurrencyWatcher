@@ -9,6 +9,7 @@ import '@fortawesome/fontawesome-free/js/solid'
 import '@fortawesome/fontawesome-free/js/regular'
 import '@fortawesome/fontawesome-free/js/brands'
 
+import "./js/head-container.js";
 import 'bootstrap';
 import './scss/app.scss';
 import './css/style.css';

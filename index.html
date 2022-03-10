@@ -7,54 +7,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<style>
-    .hijauku {
-        color: #16c784;
-        font-size: 15px;
-    }
-
-    .merahku {
-        color: #ea3943;
-        font-size: 15px;
-    }
-
-    .singkatanku {
-        color: #c7c0c0;
-        font-size: 18px;
-    }
-
-    .divku-1 {
-        text-align: center;
-        padding: 10px 10px 0px 10px;
-    }
-
-    .card-col {
-        margin-bottom: 20px;
-    }
-</style>
 
 <body>
-    <div class="container text-center">
-        <h1>Cry-Market</h1>
+    <head-container></head-container>
+    <div class="container">
+        <div class="row" id="coin-container"></div>
     </div>
     <div class="container">
-        <div class="row" id="coin-container">
-
-        </div>
+        <span>* the percentage formula is price at the exact yesterday compared to now.</span>
     </div>
 
     <script src="./dist/main.js"></script>
     <script>
         $(document).ready(function () {
             console.log("ready!");
+            checkDate();
+            getAllItem();
+        });
+
+        const myKey = '4A5939B3-289A-4697-BF14-39B72A388221';
+        const baseUrl = 'https://rest.coinapi.io/v1';
+        const filterCoin = '?filter_asset_id=BTC;ADA;MATIC;SOL;XRP;ETH;DOGE;DOT;LTC;ATOM;USDT;UNI';
+        const filterCoinArray = ['BTC', 'ADA', 'MATIC', 'SOL', 'XRP', 'ETH', 'DOGE', 'DOT', 'LTC', 'ATOM', 'USDT', 'UNI'];
+        // const filterCoinArray = ['BTC'];
+
+
+        const checkDate = () => {
             let chance;
             let tot_ady;
-            let today = new Date();
-            localDate = new Date(localStorage.getItem("last_used_day"));
+            let today = new Date().getDate();
+            localDate = localStorage.getItem("last_used_day");
 
-            if (localStorage.getItem("last_used_day") === null || today >= localDate) {
+            if (localStorage.getItem("last_used_day") == null || today > localDate) {
                 localStorage.setItem("request_today_apiku", 1);
-                localStorage.setItem("last_used_day", new Date());
+                localStorage.setItem("last_used_day", today);
                 chance = 10 - localStorage.getItem("request_today_apiku");
             } else {
                 tot_ady = localStorage.getItem("request_today_apiku");
@@ -63,16 +49,7 @@
             }
 
             alert(`${chance} remaining chance to reload it for today. Please be understand, because i use a free limited CoinAPI.io API :)`);
-
-            await getAllItem();
-            //UNCOMMENT THIS BELLOW PLEASE IF YOU WANT TO SEE THE PERCENTAGE
-            // getPercentageAllItem();
-        });
-
-        const myKey = '5147C05F-48E2-4E36-9777-EE8636661C6F';
-        const baseUrl = 'https://rest.coinapi.io/v1';
-        const filterCoin = '?filter_asset_id=BTC;ADA;MATIC;SOL;XRP;ETH;DOGE;DOT;LTC;BNB;USDT;UNI';
-        const filterCoinArray = ['BTC', 'ADA', 'MATIC', 'SOL', 'XRP', 'ETH', 'DOGE', 'DOT', 'LTC', 'BNB', 'USDT', 'UNI'];
+        }
 
         const getPercentageAllItem = async () => {
             for (let index = 0; index < filterCoinArray.length; index++) {
@@ -99,13 +76,12 @@
 
                     //LOOPING EVERY FITEM
                     for (const element of responseJson.slice(0, 15)) {
-                        appendItem(element);
+                        await appendItem(element);
 
                     }
-                    // responseJson.slice(0, 15).forEach(element => {
-                    //     console.log("ready!");
-                    //     appendItem(element);
-                    // });
+
+                    //UNCOMMENT THIS BELLOW PLEASE IF YOU WANT TO SEE THE PERCENTAGE
+                    getPercentageAllItem();
 
                 }
             } catch (error) {
@@ -145,7 +121,7 @@
         const findPerItem = async (item) => {
             //GET EXACT YESTERDAY PRICE
             let yesterday;
-            let curprice = $('#vprice_' + item);
+            let curprice = $('#vprice_' + item).val();
             var date2 = new Date();
             date2.setDate(date2.getDate() - 1);
             yesterday = date2.toISOString();
@@ -169,8 +145,8 @@
                     let caret;
                     let colorClass;
 
-                    let percentageDifferent = ((parseInt(curprice) - parseInt(responseJson.rate)) / ((parseInt(curprice) + parseInt(responseJson.rate)) / 2)) * 100;
-                    alert(`${item.asset_id}__${parseInt(curprice)}___${parseInt(responseJson.rate)} `);
+                    let percentageDifferent = ((parseFloat(curprice) - parseFloat(responseJson.rate)) / ((parseFloat(curprice) + parseFloat(responseJson.rate)) / 2)) * 100;
+                    // alert(`${item}__${parseFloat(curprice)}___${parseFloat(responseJson.rate)} `);
                     if (curprice >= responseJson.rate) {
                         colorClass = "hijauku";
                         caret = "up";
@@ -183,7 +159,7 @@
 
                     $("#span_" + item).attr('class', objKu.colorClass);
                     $("#span_" + item).html(`
-                    <i class="fa-solid fa-caret-${objKu.caret}" id="caret_${item}"></i>${objKu.percentageDifferent.toFixed(2)}}%
+                    <i class="fa-solid fa-caret-${objKu.caret}" id="caret_${item}"></i> ${objKu.percentageDifferent.toFixed(2)}%
                     `);
                 }
             } catch (error) {
